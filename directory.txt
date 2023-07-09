@@ -1,0 +1,32 @@
+blog/
+├── cmd/
+│   └── main.go
+├── internal/
+│   ├── config/
+│   │   └── config.go
+│   ├── handlers/
+│   │   ├── auth.go
+│   │   └── posts.go
+│   ├── models/
+│   │   ├── user.go
+│   │   └── post.go
+│   ├── repositories/
+│   │   ├── user_repository.go
+│   │   └── post_repository.go
+│   └── services/
+│       ├── auth_service.go
+│       └── post_service.go
+├── migrations/
+│   └── SQL
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── img/
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   └── post.html
+├── .env
+├── go.mod
+└── README.md
