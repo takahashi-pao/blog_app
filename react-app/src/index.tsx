@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// index.html内ID='root'DOMを要素とする
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
