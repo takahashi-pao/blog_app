@@ -3,31 +3,42 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type member struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
+	ID       int      `json:"id"`
+	Title    string   `json:"title"`
+	DateTime string   `json:"date"`
+	Tag      []string `json:"tag"`
 }
 
 var members = []member{
 	{
-		ID:   1,
-		Name: "test1",
-		Icon: "🐶",
+		ID:       1,
+		Title:    "test1",
+		DateTime: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
+		Tag:      []string{"💐", "☘️", "🌛"},
 	},
 	{
-		ID:   2,
-		Name: "test2",
-		Icon: "🐷",
+		ID:       2,
+		Title:    "test2",
+		DateTime: time.Date(2023, 4, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
+		Tag:      []string{"🐀", "🌳", "💆🏻"},
 	},
 	{
-		ID:   3,
-		Name: "test3",
-		Icon: "🐙",
+		ID:       3,
+		Title:    "test3",
+		DateTime: time.Date(2023, 7, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
+		Tag:      []string{"🤠", "🥴", "🐙"},
+	},
+	{
+		ID:       4,
+		Title:    "test4",
+		DateTime: time.Date(2021, 7, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
+		Tag:      []string{"🐷", "ごちポ", "レモン"},
 	},
 }
 
@@ -74,9 +85,10 @@ func getMembers() []gin.H {
 
 	for _, m := range members {
 		memberData := gin.H{
-			"id":   m.ID,
-			"name": m.Name,
-			"icon": m.Icon,
+			"id":    m.ID,
+			"title": m.Title,
+			"date":  m.DateTime,
+			"tag":   m.Tag,
 		}
 		data = append(data, memberData)
 	}
