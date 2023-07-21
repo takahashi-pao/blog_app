@@ -39,10 +39,13 @@ function App() {
     <div className='content-wrap'>
       {members.map((member) => (
         <div className={`content-background ${clickedIds.includes(member.id) ? 'clicked' : 'unclicked'}`} key={member.id}>
+          <div className={`content-background-blur ${clickedIds.includes(member.id) ? 'clicked' : 'unclicked'}`}></div>
+          <div className={`content-background-window ${clickedIds.includes(member.id) ? 'clicked' : 'unclicked'}`}></div>
+
           <span
             className={`close-button ${clickedIds.includes(member.id) ? 'displayed' : 'undisplayed'}`}
             onClick={() => handleCloseElementClick(member.id)}
-            ></span>
+          ></span>
           <div
             className={`content text-white ${hoveredIds.includes(member.id) ? 'hovered' : 'unhovered'}`}
             onMouseOver={() => handleMouseOver(member.id)}

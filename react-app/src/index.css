@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  background: #c7e1f2;
+  background: #4a4e5ee0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -33,11 +33,33 @@ p {
 }
 
 .content-background {
-  background-color: #e0e0e0;
+  background-image: url('https://plus.unsplash.com/premium_photo-1682394265183-68113f05a103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80');
+  background-size: cover;
   width: 30vw;
   height: 25vh;
   margin: 1vw;
   position: relative;
+  border-radius: 3%;
+}
+
+.content-background-blur {
+  background-image: url('https://plus.unsplash.com/premium_photo-1682394265183-68113f05a103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80');
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 3%;
+}
+
+.content-background-window {
+  background-image: url('https://plus.unsplash.com/premium_photo-1682394265183-68113f05a103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80');
+  background-size: cover;
+  width: 35%;
+  height: 30%;
+  position: absolute;
+  border-radius: 5%;
+  top: 35%;
+  left: 10%;
 }
 
 .content {
@@ -70,14 +92,12 @@ p {
   z-index: 200;
   display: block;
   position: absolute;
-  width: 5%;
-  height: 5%;
+  width: 3%;
+  padding-top: 3%;
   right: 2%;
   top: 2%;
-  border-radius: 150px;
+  border-radius: 50%;
   background: #e0e0e0;
-  box-shadow:  9px 9px 19px #c1c1c1,
-               -9px -9px 19px #ffffff;
 }
 .close-button::before, .close-button::after { /* 共通設定 */
   content: "";
@@ -103,6 +123,9 @@ p {
 /*############################################################
 ##イベント
 ############################################################*/
+.undisplayed {
+  display: none;
+}
 .hovered {
   animation-name: fadeInDiscription;
   animation-duration:1s;
@@ -131,7 +154,7 @@ p {
   }
 }
 
-.clicked {
+.content-background.clicked {
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -139,6 +162,8 @@ p {
   left: 0;
   z-index: 100;
   margin: 0;
+
+  overflow: hidden;
 
   animation-name: fadeInOutSingleContent;
   animation-duration:2s;
@@ -153,8 +178,7 @@ p {
   }
 }
 
-.unclicked {
-  background-color: #e0e0e0;
+.content-background.unclicked {
   width: 30vw;
   height: 25vh;
   margin: 1vw;
@@ -163,4 +187,22 @@ p {
   animation-name: fadeInOutSingleContent;
   animation-duration:2s;
   animation-fill-mode:forwards;
+}
+.content-background-blur.unclicked,
+.content-background-window.unclicked {
+  display: none;
+}
+.content-background-blur.clicked {
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.content-background-blur.clicked::before {
+  content: '';
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  width: 103%;
+  height: 103%;
+  display: block;
+  top: -1%;
+  left: -1%;
 }
