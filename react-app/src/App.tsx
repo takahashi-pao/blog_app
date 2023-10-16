@@ -6,16 +6,17 @@ type Member = {
   title: string;
   date: string;
   tag: string[];
+  thumbnail: string;
 }
 
 function App() {
-  const [members, setMembers] = useState<Member[]>([{ id: 0, title: '', date: '', tag: [] }]);
+  const [members, setMembers] = useState<Member[]>([{ id: 0, title: '', date: '', tag: [], thumbnail: ''}]);
   const [hoveredIds, setHoveredIds] = useState<number[]>([]);
   const [clickedIds, setClickedIds] = useState<number[]>([]);
 
   useEffect(() => {
     (async () => {
-      const data = await axios.get('http://localhost:8080');
+      const data = await axios.get('http://localhost:8080/GetArticle');
       setMembers(data.data);
     })();
   }, []);

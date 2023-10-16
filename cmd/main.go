@@ -3,54 +3,20 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
 
+	"github.com/blog_app/internal/handlers/article"
 	"github.com/gin-gonic/gin"
 )
-
-type member struct {
-	ID       int      `json:"id"`
-	Title    string   `json:"title"`
-	DateTime string   `json:"date"`
-	Tag      []string `json:"tag"`
-}
-
-var members = []member{
-	{
-		ID:       1,
-		Title:    "test1",
-		DateTime: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
-		Tag:      []string{"💐", "☘️", "🌛"},
-	},
-	{
-		ID:       2,
-		Title:    "test2",
-		DateTime: time.Date(2023, 4, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
-		Tag:      []string{"🐀", "🌳", "💆🏻"},
-	},
-	{
-		ID:       3,
-		Title:    "test3",
-		DateTime: time.Date(2023, 7, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
-		Tag:      []string{"🤠", "🥴", "🐙"},
-	},
-	{
-		ID:       4,
-		Title:    "test4",
-		DateTime: time.Date(2021, 7, 1, 0, 0, 0, 0, time.Local).Format("2006/01/02"),
-		Tag:      []string{"🐷", "ごちポ", "レモン"},
-	},
-}
 
 func main() {
 	// Ginのルーターを作成
 	router := gin.Default()
-
 	router.Use(corsMiddleware())
 
 	// GETリクエストに対するハンドラの定義
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, getMembers())
+	router.GET("/GetArticle", func(c *gin.Context) {
+		c.JSON(http.StatusOK, article.GetArticleData())
+
 	})
 
 	// POSTリクエストに対するハンドラの定義
@@ -78,22 +44,6 @@ func main() {
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func getMembers() []gin.H {
-	var data []gin.H
-
-	for _, m := range members {
-		memberData := gin.H{
-			"id":    m.ID,
-			"title": m.Title,
-			"date":  m.DateTime,
-			"tag":   m.Tag,
-		}
-		data = append(data, memberData)
-	}
-
-	return data
 }
 
 func corsMiddleware() gin.HandlerFunc {
