@@ -4,6 +4,7 @@ import BackGroundImageComponent from './parts/backGroundImage';
 import Article from './parts/article';
 import { ClickedIdsProvider } from './parts/article_click';
 import { Link } from 'react-router-dom';
+import UserStatus from '../isLogin/IsLogin';
 
 type Member = {
   id: number;
@@ -26,10 +27,7 @@ function Home() {
   return (    
     <ClickedIdsProvider>
       <div>
-        <Link to="/signIn">LOGIN</Link>
-      </div>
-      <div>
-        <Link to="/add">Go To Add</Link>
+        <UserStatus></UserStatus>
       </div>
       
       <div className='content-wrap'>

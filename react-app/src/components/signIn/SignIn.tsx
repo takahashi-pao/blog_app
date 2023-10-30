@@ -1,10 +1,12 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SignIn() {
   const [userId, setUserId] = useState(''); // IDを管理
   const [password, setPassword] = useState(''); // パスワードを管理
   const [isPasswordPage, setPasswordPage] = useState(false); // パスワード入力画面の状態
+
+  const navigate = useNavigate();
 
   const handleUserIdChange = (event: ChangeEvent<HTMLInputElement>) => {
     // ID入力欄の値が変更されたときに呼び出される関数
@@ -24,7 +26,7 @@ function SignIn() {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async() => {
+  const handleSignIn = async() => {
     // ログインボタンがクリックされたときの処理
     if (password) {
       // パスワードが入力されていれば、確認リクエストを行う
@@ -39,7 +41,8 @@ function SignIn() {
         });       
 
         const data = await response.json();
-      //   navigate("/")
+        console.log(data)
+        navigate("/")
       } catch (error) {
         console.error('IDかパスワードが違います', error);        
       }
@@ -61,7 +64,7 @@ function SignIn() {
             value={password}
             onChange={handlePasswordChange}
           />
-          <button onClick={handleLogin}>ログイン</button> {/* ログインボタン */}
+          <button onClick={handleSignIn}>ログイン</button> {/* ログインボタン */}
         </div>
       ) : (
         <div>

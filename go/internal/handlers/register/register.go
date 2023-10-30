@@ -30,6 +30,7 @@ func Register(c *gin.Context) {
 	if err != nil {
 		log.Fatalf("登録失敗 db.Exec error err:%v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "登録に失敗しました"})
+		tx.Rollback()
 		return
 	}
 
@@ -37,8 +38,10 @@ func Register(c *gin.Context) {
 	destinationPath := "img/" + file.Filename
 	if err := c.SaveUploadedFile(file, destinationPath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "ファイルの保存中にエラーが発生しました"})
+		tx.Rollback()
 		return
 	}
 
+	tx.Commit()
 	c.JSON(http.StatusOK, gin.H{"message": "登録が完了しました", "path": destinationPath})
 }

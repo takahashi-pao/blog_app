@@ -1,14 +1,19 @@
 package article
 
 import (
+	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	article_model "example.com/blog_app/go/internal/models/article"
 	dbAccess "example.com/blog_app/go/internal/services/db_Access"
 	"github.com/gin-gonic/gin"
 )
 
+/*
+記事の取得
+*/
 func GetArticleData() []gin.H {
 	var data []gin.H
 
@@ -30,6 +35,14 @@ func GetArticleData() []gin.H {
 		if err := rows.Scan(&m.ID, &m.Title, &m.DateTime, &tag_str, &m.Thumbnail); err != nil {
 			log.Fatalf("GetArticleData rows.Scan error err:%v", err)
 		}
+
+		// time.RFC3339のフォーマットにパース
+		parsedTime, err := time.Parse(time.RFC3339, m.DateTime)
+		if err != nil {
+			fmt.Println("エラー:", err)
+		}
+
+		m.DateTime = parsedTime.Format("2006/01/02")
 
 		m.Tag = strings.Split(tag_str, ",")
 

@@ -14,7 +14,7 @@ func GetThumbnail(c *gin.Context) {
 	// 引数を使ってサムネイル画像データを読み取り
 	imageData, err := os.ReadFile("img/" + argument)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "画像が見つかりません"})
+		c.JSON(http.StatusOK, gin.H{"error": "画像が見つかりません"})
 		return
 	}
 

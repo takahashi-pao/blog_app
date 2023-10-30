@@ -1,3 +1,4 @@
+import { setFips } from 'crypto';
 import React, { useState, ChangeEvent } from 'react';
 
 /**
@@ -54,7 +55,14 @@ function Register() {
         });       
 
         const data = await response.json();
+        if (data.error != null) {
+          setMessage(data.error)
+          return
+        }
         setMessage(data.message)
+        setTitle("")
+        setTag("")
+        setSelectedFile(null)
       } catch (error) {
         console.error('File upload failed', error);        
       }

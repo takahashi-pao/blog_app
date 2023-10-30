@@ -1,28 +1,51 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/base32"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"example.com/blog_app/go/internal/handlers/article"
 	"example.com/blog_app/go/internal/handlers/auth"
 	"example.com/blog_app/go/internal/handlers/register"
 	"example.com/blog_app/go/internal/handlers/thumbnail"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/sessions"
 )
 
 func main() {
 	// Ginのルーターを作成
 	router := gin.Default()
+	// リクエスト元ポートの設定
 	router.Use(corsMiddleware())
 
-	// GETリクエストに対するハンドラの定義
+	// セッションの設定
+	sessionInit()
+
+	/* API　*****************************************************/
+
+	// 記事情報の取得
 	router.GET("/GetArticle", func(c *gin.Context) {
 		c.JSON(http.StatusOK, article.GetArticleData())
 	})
 
+	// ログイン状態の取得
+	router.GET("/IsLogin", auth.IsLogin)
+
 	// 記事サムネイル取得
 	router.GET("/GetThumbnail/:path", thumbnail.GetThumbnail)
+
+	// 重複IDのチェック
+	router.GET("/CheckExistId/:id", auth.CheckExistId)
+
+	router.GET("/SignOut", auth.SignOut)
+	/**********************************************************/
+
+	/* POST *****************************************************/
 
 	router.POST("/SignIn", auth.SignIn)
 
@@ -30,26 +53,7 @@ func main() {
 
 	router.POST("/Register", register.Register)
 
-	// POSTリクエストに対するハンドラの定義
-	router.POST("/api/posts", func(c *gin.Context) {
-		// リクエストからデータを受け取る
-		var post struct {
-			Title   string `json:"title"`
-			Content string `json:"content"`
-		}
-		if err := c.ShouldBindJSON(&post); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		// データベースに投稿を保存する処理などを実行
-
-		// レスポンスを返す
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Post created successfully",
-			"post":    post,
-		})
-	})
+	/**********************************************************/
 
 	// サーバーを起動
 	if err := router.Run(":8080"); err != nil {
@@ -80,4 +84,41 @@ func corsMiddleware() gin.HandlerFunc {
 		// 次のミドルウェアやハンドラを実行
 		c.Next()
 	}
+}
+
+// セッション用の初期処理
+func sessionInit() {
+
+	// 乱数生成
+	b := make([]byte, 48)
+	_, err := io.ReadFull(rand.Reader, b)
+	if err != nil {
+		panic(err)
+	}
+	str := strings.TrimRight(base32.StdEncoding.EncodeToString(b), "=")
+
+	// 新しいstoreとセッションを準備
+	auth.Store = sessions.NewCookieStore([]byte(str))
+	auth.Session = sessions.NewSession(auth.Store, auth.Session_name)
+
+	// セッションの有効範囲を指定
+	auth.Store.Options = &sessions.Options{
+		Domain:   "localhost",
+		Path:     "/",
+		MaxAge:   3600 * 24 * 7,
+		Secure:   false,
+		HttpOnly: true,
+	}
+
+	// log
+	fmt.Println("key     data --")
+	fmt.Println(str)
+	fmt.Println("")
+	fmt.Println("store   data --")
+	fmt.Println(auth.Store)
+	fmt.Println("")
+	fmt.Println("session data --")
+	fmt.Println(auth.Session)
+	fmt.Println("")
+
 }

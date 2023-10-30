@@ -11,9 +11,20 @@ function SignUp() {
 
   const navigate = useNavigate();
 
-  const handleUserIdChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUserIdChange = async(event: ChangeEvent<HTMLInputElement>) => {
     // ID入力欄の値が変更されたときに呼び出される関数
     setUserId(event.target.value);
+    // 入力IDに重複がないかを確認
+    if (event.target.value.length > 0){
+        const response = await fetch(`http://localhost:8080/CheckExistId/${event.target.value}`);
+        const result = await response.json();
+        
+        if (result.message){
+            console.log(result.message)
+        } else {
+            console.log(result.error)
+        }
+    }
   };
 
   const handleLoginClick = () => {
@@ -54,7 +65,7 @@ function SignUp() {
           });       
   
           const data = await response.json();
-        //   navigate("/")
+          navigate("/")
         } catch (error) {
           console.error('ユーザーの登録に失敗しました', error);        
         }
