@@ -1,5 +1,5 @@
 import { setFips } from 'crypto';
-import React, { useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 
 /**
  * データ登録
@@ -69,13 +69,18 @@ function Register() {
 
         const data = await response.json();
         if (data.error != null) {
-          setMessage(data.error)
-          return
+          setMessage(data.error);
+          return;
         }
         setMessage(data.message)
-        setTitle("")
-        setTag("")
-        setSelectedFile(null)
+
+        // 入力値をリセットする
+        setTitle("");
+        setTag("");
+        setSelectedFile(null);
+        const thumbnailElem: HTMLInputElement = document.getElementById('thumbnail') as HTMLInputElement;
+        thumbnailElem.value = '';
+
       } catch (error) {
         console.error('File upload failed', error);        
       }
@@ -95,7 +100,7 @@ function Register() {
         </div>
         <div>
             <label>Thumbnail</label>
-            <input type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
+            <input id='thumbnail' type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
         </div>
         <button onClick={handleUpload}>Upload</button>  
     </div>
