@@ -66,7 +66,7 @@ const UserStatus = () => {
                 <button onClick={handleSignOut}>サインアウト</button> {/* サインアウトボタン */}
             </div>
             <div>
-                <Link to="/add">Go To Add</Link>
+                <Link to="/register">Go To Add</Link>
             </div>
         </div>
       ) : (
