@@ -34,7 +34,20 @@ function Register() {
   const handleThumbnailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      setSelectedFile(files[0]);
+      // ファイルが選択された場合、拡張をチェックする
+      const fileName: string = files[0].name;
+      const fileExtension: string = fileName.split(".")[1];
+      const allowExtension: string[] = ["jpg", "jpeg", "png"];
+
+      if (allowExtension.includes(fileExtension) && fileName.split(".").length == 2){
+        setSelectedFile(files[0]);
+        return
+      }
+
+      // 不正な拡張子のファイルが選択された場合、選択を無効化する
+      setMessage("不正な拡張子です");
+      setSelectedFile(null);
+      event.target.value = "";      
     }
   };
 
@@ -49,7 +62,7 @@ function Register() {
       formData.append('file', selectedFile);
 
       try {
-        const response = await fetch('http://localhost:8080/Register', {
+        const response = await fetch('http://localhost:8080/auth/Register', {
           method: 'POST',
           body: formData,
         });       
@@ -82,7 +95,7 @@ function Register() {
         </div>
         <div>
             <label>Thumbnail</label>
-            <input type="file" accept="image/*" onChange={handleThumbnailChange} />            
+            <input type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
         </div>
         <button onClick={handleUpload}>Upload</button>  
     </div>

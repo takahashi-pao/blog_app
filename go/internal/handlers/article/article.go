@@ -7,7 +7,7 @@ import (
 	"time"
 
 	article_model "example.com/blog_app/go/internal/models/article"
-	dbAccess "example.com/blog_app/go/internal/services/db_Access"
+	dbAccess "example.com/blog_app/go/internal/services/db/db_Access"
 	"github.com/gin-gonic/gin"
 )
 

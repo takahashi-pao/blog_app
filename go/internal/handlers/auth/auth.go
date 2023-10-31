@@ -9,7 +9,7 @@ import (
 
 	auth_response_model "example.com/blog_app/go/internal/models/auth"
 	timeformat "example.com/blog_app/go/internal/models/timeFormat"
-	dbAccess "example.com/blog_app/go/internal/services/db_Access"
+	dbAccess "example.com/blog_app/go/internal/services/db/db_Access"
 )
 
 // セッション名

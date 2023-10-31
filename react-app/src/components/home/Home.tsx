@@ -4,7 +4,7 @@ import BackGroundImageComponent from './parts/backGroundImage';
 import Article from './parts/article';
 import { ClickedIdsProvider } from './parts/article_click';
 import { Link } from 'react-router-dom';
-import UserStatus from '../isLogin/IsLogin';
+import UserStatus from '../userStatus/userStatus';
 
 type Member = {
   id: number;

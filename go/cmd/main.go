@@ -13,6 +13,7 @@ import (
 	"example.com/blog_app/go/internal/handlers/auth"
 	"example.com/blog_app/go/internal/handlers/register"
 	"example.com/blog_app/go/internal/handlers/thumbnail"
+	"example.com/blog_app/go/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
@@ -25,6 +26,11 @@ func main() {
 
 	// セッションの設定
 	sessionInit()
+	authGroup := router.Group("/auth")
+	authGroup.Use(middleware.AuthMiddleware())
+	{
+		authGroup.POST("/Register", register.Register)
+	}
 
 	/* API　*****************************************************/
 
@@ -50,8 +56,6 @@ func main() {
 	router.POST("/SignIn", auth.SignIn)
 
 	router.POST("/SignUp", auth.SignUp)
-
-	router.POST("/Register", register.Register)
 
 	/**********************************************************/
 
