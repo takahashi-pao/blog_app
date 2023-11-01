@@ -8,7 +8,6 @@ type ClickedIdsContextType = {
 
 const ClickedIdsContext = createContext<ClickedIdsContextType | null>(null);
 
-
 export function useClickedIds() {
   const context = useContext(ClickedIdsContext);
   if (context === null) {

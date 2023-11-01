@@ -20,9 +20,12 @@ func main() {
 
 	// セッションの設定
 	middleware.SessionInit()
+
+	// 認証済みのみリクエスト可能
 	authGroup := router.Group("/auth")
 	authGroup.Use(middleware.AuthMiddleware())
 	{
+		// 記事登録
 		authGroup.POST("/Register", register.Register)
 	}
 
@@ -42,13 +45,14 @@ func main() {
 	// 重複IDのチェック
 	router.GET("/CheckExistId/:id", auth.CheckExistId)
 
+	// サインアウト
 	router.GET("/SignOut", auth.SignOut)
 	/**********************************************************/
 
 	/* POST *****************************************************/
-
+	// サインイン
 	router.POST("/SignIn", auth.SignIn)
-
+	// サインアップ
 	router.POST("/SignUp", auth.SignUp)
 
 	/**********************************************************/

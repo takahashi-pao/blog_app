@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// DBのセットアップ（Open処理)
 func setupDB(dbDriver string, dsn string) *sql.DB {
 	db, err := sql.Open(dbDriver, dsn)
 	if err != nil {
@@ -18,6 +19,9 @@ func setupDB(dbDriver string, dsn string) *sql.DB {
 	return db
 }
 
+/*
+DBインスタンスの生成
+*/
 func AccessDB() *sql.DB {
 	// .env ファイルをロード
 	err := godotenv.Load()

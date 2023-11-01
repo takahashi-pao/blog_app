@@ -12,6 +12,9 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+/*
+認証ミドルウェア
+*/
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if auth.Session.Values["userId"] == nil {
@@ -19,11 +22,14 @@ func AuthMiddleware() gin.HandlerFunc {
 			fmt.Print(reqUrl)
 			return
 		}
-
+		// 次のミドルウェアやハンドラを実行
 		c.Next()
 	}
 }
 
+/*
+リクエストミドルウェア
+*/
 func CorsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// リクエスト元のオリジンを取得

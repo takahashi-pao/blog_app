@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+サムネイルの取得API
+*/
 func GetThumbnail(c *gin.Context) {
 	// URLパラメータから引数を取得
 	argument := c.Param("path")

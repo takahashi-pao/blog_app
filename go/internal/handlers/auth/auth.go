@@ -178,6 +178,9 @@ func IsLogin(c *gin.Context) {
 	c.JSON(http.StatusOK, signOutResponse)
 }
 
+/*
+セッションへ値とキーをセット
+*/
 func SetSession(val interface{}, key string, c *gin.Context) {
 	Session.Values[key] = val
 	log.Printf(("set val in session(%v):%v"), key, key)

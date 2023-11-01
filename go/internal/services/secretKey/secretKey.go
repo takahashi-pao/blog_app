@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 )
 
+// 秘密鍵の生成
 func GenerateSecretKey() (string, error) {
 	// 32バイトのランダムなデータを生成
 	randomBytes := make([]byte, 32)

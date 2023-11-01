@@ -13,6 +13,7 @@ import (
 	dbAccess "example.com/blog_app/go/internal/services/db/db_Access"
 )
 
+// 登録機能
 func Register(c *gin.Context) {
 	// フォームからファイルを取得
 	file, err := c.FormFile("file")
