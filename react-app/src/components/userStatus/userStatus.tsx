@@ -11,6 +11,8 @@ type auth_response_props = {
 const UserStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
+  const [deleteModeBtnLabel, setDeleteModeBtnLabel] = useState('')
+  const [isClickDeleteBtn, setIsClickDeleteBtn] = useState(false)
 
   // サーバーからログイン状態とユーザーIDを取得する非同期関数
   const fetchUserStatus = async () => {
@@ -52,23 +54,52 @@ const UserStatus = () => {
       }
   };
 
+  const handleDeleteBtnLabel = () => {
+    if(isClickDeleteBtn){
+      // 削除モード→通常モード
+      setIsClickDeleteBtn(false)      
+      return
+    }
+
+    // 通常モード→削除モード
+    setIsClickDeleteBtn(true)    
+  }
+
+  useEffect(() => {
+    if(isClickDeleteBtn){
+      setDeleteModeBtnLabel("削除モード")
+    }else{
+      setDeleteModeBtnLabel("通常モード")
+    }
+  }, [isClickDeleteBtn])
+
   useEffect(() => {
     // コンポーネントがマウントされたときにログイン状態を取得
     fetchUserStatus();
+    setIsClickDeleteBtn(false)
   }, []);
 
   return (
     <div>
       {isLoggedIn ? (
         <div>
-            <p>サインイン中 - ユーザーID: {userId}</p>
-            <div>            
-                <button onClick={handleSignOut}>サインアウト</button> {/* サインアウトボタン */}
-            </div>
-            <div>
-                <Link to="/register">Go To Add</Link>
-            </div>
+          <div>
+            <p></p>
+          </div>
+          
+          <div>
+              <p>サインイン中 - ユーザーID: {userId}</p>
+              <div>            
+                  <button onClick={handleSignOut}>サインアウト</button> {/* サインアウトボタン */}
+              </div>
+              <div>
+                  <Link to="/register">Go To Add</Link>
+                  <br></br>
+                  <button onClick={handleDeleteBtnLabel}>{deleteModeBtnLabel}</button>
+              </div>
+          </div>
         </div>
+
       ) : (
         <div>
             <div>            
