@@ -36,7 +36,7 @@ func CorsMiddleware() gin.HandlerFunc {
 		origin := c.Request.Header.Get("Origin")
 
 		// ポート番号が3000であるオリジンのみ許可
-		if origin == "http://localhost:3000" {
+		if origin == "https://localhost:3000" {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
