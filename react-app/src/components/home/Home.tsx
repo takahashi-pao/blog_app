@@ -5,6 +5,7 @@ import Article from './parts/article';
 import { ClickedIdsProvider } from './parts/article_click';
 import { Link } from 'react-router-dom';
 import UserStatus from '../userStatus/userStatus';
+import { IsDeleteModeProvider } from '../userStatus/isDeleteMode';
 
 type Member = {
   id: number;
@@ -24,8 +25,10 @@ function Home() {
     })();
   }, []);
 
-  return (    
+  return (   
+    <IsDeleteModeProvider>
     <ClickedIdsProvider>
+      
       <div>
         <UserStatus></UserStatus>
       </div>
@@ -38,6 +41,9 @@ function Home() {
         ))}
       </div>
     </ClickedIdsProvider>
+
+    </IsDeleteModeProvider>
+
   );
 }
 

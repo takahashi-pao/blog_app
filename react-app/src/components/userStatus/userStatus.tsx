@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useIsDeleteMode } from './isDeleteMode';
+import { useClickedIds } from '../home/parts/article_click';
 
 type auth_response_props = {
-    message: string,
-    error: string,
-    userId: string,
-    isSignIn: boolean
+  message: string,
+  error: string,
+  userId: string,
+  isSignIn: boolean
 }
 
 const UserStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
-  const [deleteModeBtnLabel, setDeleteModeBtnLabel] = useState('')
-  const [isClickDeleteBtn, setIsClickDeleteBtn] = useState(false)
+  const {isDeleteMode, setIsDeleteMode} = useIsDeleteMode();
+  const [deleteModeBtnLabel, setDeleteModeBtnLabel] = useState('');
+  const { clickedIds, setClickedIds } = useClickedIds();
 
   // サーバーからログイン状態とユーザーIDを取得する非同期関数
   const fetchUserStatus = async () => {
@@ -55,28 +58,29 @@ const UserStatus = () => {
   };
 
   const handleDeleteBtnLabel = () => {
-    if(isClickDeleteBtn){
+    if(isDeleteMode){
       // 削除モード→通常モード
-      setIsClickDeleteBtn(false)      
+      setIsDeleteMode(false)     
       return
     }
 
     // 通常モード→削除モード
-    setIsClickDeleteBtn(true)    
+    setIsDeleteMode(true)    
   }
 
   useEffect(() => {
-    if(isClickDeleteBtn){
+    if(isDeleteMode){
       setDeleteModeBtnLabel("削除モード")
     }else{
       setDeleteModeBtnLabel("通常モード")
     }
-  }, [isClickDeleteBtn])
+    setClickedIds([])
+  }, [isDeleteMode])
 
   useEffect(() => {
     // コンポーネントがマウントされたときにログイン状態を取得
     fetchUserStatus();
-    setIsClickDeleteBtn(false)
+    setIsDeleteMode(false)
   }, []);
 
   return (

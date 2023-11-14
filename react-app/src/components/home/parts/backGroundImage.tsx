@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useClickedIds, ClickedIdsProvider } from './article_click';
+import { useClickedIds } from './article_click';
+import { useIsDeleteMode } from '../../userStatus/isDeleteMode';
+import { posix } from 'path';
 
 type BackGroundImageComponentProps = {
   id: number;
@@ -10,6 +12,7 @@ type BackGroundImageComponentProps = {
 function BackGroundImageComponent({ id, thumbnailFileName, children }: BackGroundImageComponentProps) {
   const [imageData, setImageData] = useState<string | null>(null);
   const { clickedIds, setClickedIds } = useClickedIds();
+  const {isDeleteMode, setIsDeleteMode} = useIsDeleteMode();
 
   useEffect(() => {
     // Ginサーバーから画像データを取得
@@ -22,14 +25,25 @@ function BackGroundImageComponent({ id, thumbnailFileName, children }: BackGroun
     }
   }, [thumbnailFileName]);
 
+  const handleIsClicked = () => {
+    if(clickedIds.includes(id) && !isDeleteMode){
+      return 'clicked'
+    }
+
+    return 'unclicked '
+  }
+
   return (
-    <div className={`content-background ${clickedIds.includes(id) ? 'clicked' : 'unclicked'}`} key={id}        
-        onClick={() => {if(!clickedIds.includes(id)) setClickedIds([id])}}
-        style={{
-        backgroundImage: `url(${imageData})`,
-      }}>
-      {children} {}
+    <div className={`overflow-hidden`}>
+      <div className={`${clickedIds.includes(id) && isDeleteMode ? 'content wd-100 hi-100 op-50 bg-black delete-mode-background-effect' : ''}`} key={id+'_deleteModeBackGroundEffect'}></div>
+      <div className={`content-background ${handleIsClicked()}`} key={id}        
+          style={{
+          backgroundImage: `url(${imageData})`,
+        }}>
+        {children} {}
+      </div>
     </div>
+
   );
 }
 
