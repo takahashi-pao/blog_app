@@ -9,6 +9,7 @@ import (
 
 	auth_response_model "example.com/blog_app/go/internal/models/auth"
 	timeformat "example.com/blog_app/go/internal/models/timeFormat"
+	"example.com/blog_app/go/internal/services/common"
 	dbAccess "example.com/blog_app/go/internal/services/db/db_Access"
 )
 
@@ -153,25 +154,24 @@ func CheckExistId(c *gin.Context) {
 */
 func IsLogin(c *gin.Context) {
 	// セッションを取得
-	userId := Session.Values["userId"]
-	log.Printf(("userId:%v"), userId)
+	userId := common.ConvertToString(Session.Values["userId"])
 
-	if userId == nil {
+	if userId != "nil" {
 		signOutResponse := auth_response_model.Auth_Response_Props{
-			Message:  "サインアウトしています",
+			Message:  "サインインしています",
 			Error:    "",
-			UserId:   "",
-			IsSignIn: false,
+			UserId:   userId,
+			IsSignIn: true,
 		}
 		c.JSON(http.StatusOK, signOutResponse)
 		return
 	}
 
 	signOutResponse := auth_response_model.Auth_Response_Props{
-		Message:  "サインインしています",
+		Message:  "サインアウトしています",
 		Error:    "",
-		UserId:   userId.(string),
-		IsSignIn: true,
+		UserId:   "",
+		IsSignIn: false,
 	}
 
 	// セッション情報をAPIレスポンスとして返す
@@ -185,4 +185,9 @@ func SetSession(val interface{}, key string, c *gin.Context) {
 	Session.Values[key] = val
 	log.Printf(("set val in session(%v):%v"), key, key)
 	sessions.Save(c.Request, c.Writer)
+}
+
+// ログインユーザーIDを取得
+func GetLoginUserId() string {
+	return common.ConvertToString(Session.Values["userId"])
 }

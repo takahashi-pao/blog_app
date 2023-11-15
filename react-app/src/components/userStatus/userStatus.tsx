@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useIsDeleteMode } from './isDeleteMode';
 import { useClickedIds } from '../home/parts/article_click';
 
+// 認証系レスポンスプロパティ：APIサーバとの互換性
 type auth_response_props = {
   message: string,
   error: string,
@@ -10,12 +11,14 @@ type auth_response_props = {
   isSignIn: boolean
 }
 
+// ユーザーステータス
 const UserStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
   const {isDeleteMode, setIsDeleteMode} = useIsDeleteMode();
   const [deleteModeBtnLabel, setDeleteModeBtnLabel] = useState('');
   const { clickedIds, setClickedIds } = useClickedIds();
+  const navigate = useNavigate();
 
   // サーバーからログイン状態とユーザーIDを取得する非同期関数
   const fetchUserStatus = async () => {
@@ -68,6 +71,24 @@ const UserStatus = () => {
     setIsDeleteMode(true)    
   }
 
+  // 選択した記事の論理削除を行う
+  const deleteArticle = async() => {
+    try {
+      const formData = new FormData();
+      formData.append('ids', JSON.stringify(clickedIds));
+
+      const response = await fetch('http://localhost:8080/deleteArticle', {
+        method: 'POST',
+        body: formData,
+      });       
+
+      const data = await response.json();
+      window.location.reload();
+    } catch (error) {
+      console.error('ユーザーの登録に失敗しました', error);        
+    }
+  }
+
   useEffect(() => {
     if(isDeleteMode){
       setDeleteModeBtnLabel("削除モード")
@@ -100,6 +121,7 @@ const UserStatus = () => {
                   <Link to="/register">Go To Add</Link>
                   <br></br>
                   <button onClick={handleDeleteBtnLabel}>{deleteModeBtnLabel}</button>
+                  {isDeleteMode && clickedIds.length > 0 ? (<button onClick={deleteArticle}>削除する</button>) : (<span></span>)}
               </div>
           </div>
         </div>

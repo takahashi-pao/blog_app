@@ -1,0 +1,13 @@
+#resister-area {
+    max-width: 940px;
+    padding: 0 40px;
+    margin: 0 auto;
+}
+
+.input-item {
+    width: 100%;
+}
+
+#article {
+    height: 40vh;
+}

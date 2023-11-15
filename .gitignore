@@ -5,3 +5,4 @@ react-app/cert.pem
 react-app/key.pem
 react-app/server.cert
 react-app/server.key
+go/cmd/img/

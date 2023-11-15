@@ -1,5 +1,6 @@
 import { setFips } from 'crypto';
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, ChangeEventHandler } from 'react';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 /**
  * データ登録
@@ -10,20 +11,21 @@ function Register() {
   const [title, setTitle] = useState<string>('');
   const [tag, setTag] = useState<string>('');
   const [message, setMessage] = useState<string>('');
+  const navigate: NavigateFunction = useNavigate()
 
   /**
    * タイトル入力値変更イベント
    * @param event
    */
-  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+  const handleTitleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    // setTitle();
   };
 
   /**
    * タグ入力値変更イベント
    * @param event 
    */
-  const handleTagChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleTagChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTag(event.target.value);
   };
 
@@ -37,7 +39,7 @@ function Register() {
       // ファイルが選択された場合、拡張をチェックする
       const fileName: string = files[0].name;
       const fileExtension: string = fileName.split(".")[1];
-      const allowExtension: string[] = ["jpg", "jpeg", "png"];
+      const allowExtension: string[] = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
 
       if (allowExtension.includes(fileExtension) && fileName.split(".").length == 2){
         setSelectedFile(files[0]);
@@ -81,28 +83,35 @@ function Register() {
         const thumbnailElem: HTMLInputElement = document.getElementById('thumbnail') as HTMLInputElement;
         thumbnailElem.value = '';
 
+        navigate("/")
       } catch (error) {
         console.error('File upload failed', error);        
       }
     }
   };
 
+  const resisterAreaCss ={
+    maxWidth: '940px',
+    padding: '0 40px',
+    margin: '0 auto'
+  }
+
   return (
-    <div>
+    <div id='resister-area'>
         <div><p>{message}</p></div>
         <div>
-            <label>Title</label>
-            <input type='text' value={title} onChange={handleTitleChange} />
+            <textarea id='title' className='input-item' value={title} placeholder='Title' rows={1} onChange={handleTitleChange} ></textarea>
         </div>
         <div>
-            <label>Tag</label>
-            <input id='tag' value={tag} onChange={handleTagChange} />            
+            <textarea id='tag' className='input-item' value={tag} placeholder='Tag' rows={1} onChange={handleTagChange} ></textarea>        
         </div>
         <div>
-            <label>Thumbnail</label>
-            <input id='thumbnail' type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
+            <textarea id='article' className='input-item' value={tag} placeholder='write article content...' onChange={handleTagChange} ></textarea> 
         </div>
-        <button onClick={handleUpload}>Upload</button>  
+        <div>            
+            <input id='thumbnail' className='input-item' type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
+        </div>
+        <button onClick={handleUpload}>Upload</button> 
     </div>
   );
 }

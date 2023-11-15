@@ -53,7 +53,7 @@ func Register(c *gin.Context) {
 										end as isExistsFileName	
 									from 
 										"article" ui 
-									where thumbnail = $1 and delete_date is null`
+									where thumbnail = $1 and delete_flag = false`
 
 	db := dbAccess.AccessDB()
 	err = db.QueryRow(selectQuery, file.Filename).Scan(&isExistsFileName)
@@ -67,14 +67,14 @@ func Register(c *gin.Context) {
 	}
 
 	// ファイルの登録処理
-	insertQuery := "INSERT INTO article (title, create_user, create_date, update_user, update_date, delete_user, delete_date, tag, thumbnail) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	insertQuery := "INSERT INTO article (title, create_user, create_date, update_user, update_date, delete_user, delete_date, tag, thumbnail, delete_flag) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
 	tx, err := db.Begin()
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	_, err = tx.Exec(insertQuery, c.PostForm("title"), "USER", timeformat.GetTimeNowMoldFormat(), "USER", timeformat.GetTimeNowMoldFormat(), nil, nil, c.PostForm("tag"), file.Filename)
+	_, err = tx.Exec(insertQuery, c.PostForm("title"), "USER", timeformat.GetTimeNowMoldFormat(), "USER", timeformat.GetTimeNowMoldFormat(), nil, nil, c.PostForm("tag"), file.Filename, false)
 
 	if err != nil {
 		log.Fatalf("登録失敗 db.Exec error err:%v", err)

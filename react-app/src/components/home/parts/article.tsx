@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useClickedIds } from './article_click';
 import { useIsDeleteMode } from '../../userStatus/isDeleteMode';
+import { GetByteSize } from '../../../common'
+import { kMaxLength } from 'buffer';
 
 type Member = {
   id: number;
@@ -37,9 +39,41 @@ function Article(member: Member) {
     return 'unclicked '
   }
 
+  const moldTitleLength = () => {
+    const byte: number = GetByteSize(member.title)
+    console.log(member.id+":byte="+byte+" "+member.title.substring(0, 10)+"...")
+    console.log(member.title+":"+truncateStringToBytes())
+  }
+
+  function truncateStringToBytes() {
+    let truncated = '';
+    let bytes = 0;
+  
+    for (let i = 0; i < member.title.length; i++) {
+      const char = member.title.charAt(i);
+      const charCode = char.charCodeAt(0);
+  
+      // UTF-8 のエンコード方式に基づいて、1 バイトから 4 バイトまでの範囲で文字をカウント
+      bytes += charCode < 0x80 ? 1 : charCode < 0x800 ? 2 : charCode < 0x10000 ? 3 : 4;
+  
+      if (bytes > 22) {
+        break;
+      }
+  
+      truncated += char;
+    }
+
+    if (member.title.length > truncated.length){
+      truncated += "..."
+    }
+  
+    return truncated;
+  }
+
   useEffect(() => {
-    console.log("delete")
-  }, [isDelete])
+    console.log(clickedIds)
+    moldTitleLength()
+  }, [clickedIds])
 
   // 削除モード管理
   useEffect(() => {   

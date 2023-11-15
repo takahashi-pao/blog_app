@@ -30,7 +30,7 @@ export function IsDeleteModeProvider({ children }: isDeleteModeProviderProps) {
 
     return (
         <isDeleteModeContext.Provider value={{ isDeleteMode, setIsDeleteMode }}>
-        {children}
+        {children}     
         </isDeleteModeContext.Provider>
     );
 }

@@ -54,6 +54,8 @@ func main() {
 	router.POST("/SignIn", auth.SignIn)
 	// サインアップ
 	router.POST("/SignUp", auth.SignUp)
+	// 記事削除
+	router.POST("/deleteArticle", article.DeleteArticle)
 
 	/**********************************************************/
 
