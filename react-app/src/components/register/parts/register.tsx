@@ -10,6 +10,7 @@ function Register() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>('');
   const [tag, setTag] = useState<string>('');
+  const [article, setArticle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const navigate: NavigateFunction = useNavigate()
 
@@ -18,7 +19,7 @@ function Register() {
    * @param event
    */
   const handleTitleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    // setTitle();
+    setTitle(event.target.value);
   };
 
   /**
@@ -27,6 +28,14 @@ function Register() {
    */
   const handleTagChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTag(event.target.value);
+  };
+
+  /**
+   * タグ入力値変更イベント
+   * @param event 
+   */
+  const handleArticleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setArticle(event.target.value);
   };
 
   /**
@@ -106,7 +115,7 @@ function Register() {
             <textarea id='tag' className='input-item' value={tag} placeholder='Tag' rows={1} onChange={handleTagChange} ></textarea>        
         </div>
         <div>
-            <textarea id='article' className='input-item' value={tag} placeholder='write article content...' onChange={handleTagChange} ></textarea> 
+            <textarea id='article' className='input-item' value={article} placeholder='write article content...' onChange={handleArticleChange} ></textarea> 
         </div>
         <div>            
             <input id='thumbnail' className='input-item' type="file" accept=".jpg, .jpeg, .png" onChange={handleThumbnailChange} />            
