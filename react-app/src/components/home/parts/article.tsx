@@ -101,7 +101,7 @@ function Article(member: Member) {
                 <p className='title text-white'>{member.title}</p>
 
                 <div>
-                {member.tag.map((tagItem, index) => (
+                {member.tag?.map((tagItem, index) => (
                 <span className='tag text-white' key={index}>
                 #{tagItem}
                 </span>
