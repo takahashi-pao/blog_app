@@ -1,10 +1,9 @@
 package article
 
 import (
-	"fmt"
+	"database/sql"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"example.com/blog_app/go/internal/handlers/auth"
@@ -20,38 +19,82 @@ import (
 */
 func GetArticleData() []gin.H {
 	var data []gin.H
-
-	sqlCommand := "select id, title,update_date ,tag ,thumbnail  from article where delete_flag = false"
-
 	db := dbAccess.AccessDB()
-	rows, err := db.Query(sqlCommand)
-
+	articleData, err := getArticleData(db)
 	if err != nil {
-		log.Printf("GetArticleData db.Query error err:%v", err)
+		// エラーハンドリング
+		log.Print(err)
 		return data
 	}
 
+	return articleData
+}
+
+func getTagsForArticle(db *sql.DB, articleID int) ([]string, error) {
+	var tags []string
+
+	sqlCommand := "SELECT tags.name FROM tags JOIN article_tags ON tags.tag_id = article_tags.tag_id WHERE article_tags.article_id = $1"
+	rows, err := db.Query(sqlCommand, articleID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tag string
+		if err := rows.Scan(&tag); err != nil {
+			return nil, err
+		}
+		tags = append(tags, tag)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
+func parseDateTime(dateTime string) (string, error) {
+	parsedTime, err := time.Parse(time.RFC3339, dateTime)
+	if err != nil {
+		return "", err
+	}
+	return parsedTime.Format("2006/01/02"), nil
+}
+
+func getArticleData(db *sql.DB) ([]gin.H, error) {
+	var data []gin.H
+
+	sqlCommand := "SELECT id, title, update_date, thumbnail FROM article WHERE delete_flag = false"
+	rows, err := db.Query(sqlCommand)
+	if err != nil {
+		log.Printf("GetArticleData db.Query error: %v", err)
+		return nil, err
+	}
 	defer rows.Close()
 
 	for rows.Next() {
 		m := &article_model.Article_list_model{}
-		var tag_str string
 
-		if err := rows.Scan(&m.ID, &m.Title, &m.DateTime, &tag_str, &m.Thumbnail); err != nil {
-			log.Printf("GetArticleData rows.Scan error err:%v", err)
-			return data
+		if err := rows.Scan(&m.ID, &m.Title, &m.DateTime, &m.Thumbnail); err != nil {
+			log.Printf("GetArticleData rows.Scan error: %v", err)
+			return nil, err
 		}
 
-		// time.RFC3339のフォーマットにパース
-		parsedTime, err := time.Parse(time.RFC3339, m.DateTime)
+		tags, err := getTagsForArticle(db, m.ID)
 		if err != nil {
-			fmt.Println("エラー:", err)
-			return data
+			log.Printf("getTagsForArticle error: %v", err)
+			return nil, err
 		}
+		m.Tag = tags
 
-		m.DateTime = parsedTime.Format("2006/01/02")
-
-		m.Tag = strings.Split(tag_str, ",")
+		dateTime, err := parseDateTime(m.DateTime)
+		if err != nil {
+			log.Printf("parseDateTime error: %v", err)
+			return nil, err
+		}
+		m.DateTime = dateTime
 
 		articleData := gin.H{
 			"id":        m.ID,
@@ -63,7 +106,13 @@ func GetArticleData() []gin.H {
 
 		data = append(data, articleData)
 	}
-	return data
+
+	if err := rows.Err(); err != nil {
+		log.Printf("GetArticleData rows.Err error: %v", err)
+		return nil, err
+	}
+
+	return data, nil
 }
 
 func DeleteArticle(c *gin.Context) {
