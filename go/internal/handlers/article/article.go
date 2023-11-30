@@ -15,7 +15,7 @@ import (
 )
 
 /*
-記事の取得
+記事の取得：エントリポイント
 */
 func GetArticleData() []gin.H {
 	var data []gin.H
@@ -30,6 +30,7 @@ func GetArticleData() []gin.H {
 	return articleData
 }
 
+// タグの取得
 func getTagsForArticle(db *sql.DB, articleID int) ([]string, error) {
 	var tags []string
 
@@ -63,6 +64,7 @@ func parseDateTime(dateTime string) (string, error) {
 	return parsedTime.Format("2006/01/02"), nil
 }
 
+// 記事の取得
 func getArticleData(db *sql.DB) ([]gin.H, error) {
 	var data []gin.H
 
@@ -132,7 +134,6 @@ func DeleteArticle(c *gin.Context) {
 		return
 	}
 
-	// ids_str := "("
 	where_str := ""
 
 	for i := 0; i < len(ids); i++ {
