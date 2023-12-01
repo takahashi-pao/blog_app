@@ -111,6 +111,7 @@ p {
 
 .tag {
   margin-right: 3%;
+  cursor: pointer;
 }
 
 .close-button {
