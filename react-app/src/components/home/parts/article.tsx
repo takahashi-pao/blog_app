@@ -18,6 +18,7 @@ function Article(member: Member) {
   const { clickedIds, setClickedIds } = useClickedIds();
   const {isDeleteMode, setIsDeleteMode} = useIsDeleteMode();
   const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isTagHover, setIsTagHover] = useState<boolean>(false);
 
   const handleOnClick = (targetId:number) => {
     if(isDeleteMode && clickedIds.includes(targetId)){
@@ -70,6 +71,16 @@ function Article(member: Member) {
     return truncated;
   }
 
+  const addHoverClassToTag = (id: string) => {
+    document.getElementById(id)?.classList.add('tag-hover') 
+    setIsTagHover(true)
+  }
+
+  const removeHoverClassToTag = (id: string) => {
+    document.getElementById(id)?.classList.remove('tag-hover') 
+    setIsTagHover(false)
+  }
+
   useEffect(() => {
     console.log(clickedIds)
     moldTitleLength()
@@ -93,7 +104,7 @@ function Article(member: Member) {
         className={`content text-white ${hoveredIds.includes(member.id) ? 'hovered' : 'unhovered'}`}
         onMouseOver={() => setHoveredIds([member.id])}
         onMouseOut={() => setHoveredIds([])}
-        onClick={() => handleOnClick(member.id)}
+        onClick={() => !isTagHover ? handleOnClick(member.id) : null}
         >
             <div className={`${clickedIds.includes(member.id) ? isDeleteMode ? 'wd-100 hi-100 op-50 bg-black': '' : 'wd-100 hi-100 op-50 bg-black'}`}></div>
             <div className='discription'>                
@@ -102,10 +113,14 @@ function Article(member: Member) {
 
                 <div>
                 {member.tag?.map((tagItem, index) => (
-                <span className='tag text-white' key={index}>
-                #{tagItem}
-                </span>
-                ))}
+                <div key={index} >
+                  <span className='tag text-white' id={String(member.id+tagItem)}
+                  onMouseOver={() => addHoverClassToTag(String(member.id+tagItem))}
+                  onMouseOut={() => removeHoverClassToTag(String(member.id+tagItem))}
+                  onClick={() => {console.log('タグ検索')}}>
+                    {'#'+tagItem}</span>
+                  </div>
+                  ))}
                 </div>
             </div>
         </div>

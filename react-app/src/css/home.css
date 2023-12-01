@@ -111,6 +111,8 @@ p {
 
 .tag {
   margin-right: 3%;
+  cursor: pointer;
+  z-index: 10;
 }
 
 .close-button {
@@ -250,4 +252,8 @@ p {
   background-color: red;
   opacity: 0.3;
   position: absolute;
+}
+
+.tag-hover {
+  color: rgb(120, 157, 202);
 }
