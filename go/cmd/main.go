@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"sync"
 
 	"example.com/blog_app/go/internal/handlers/article"
 	"example.com/blog_app/go/internal/handlers/auth"
@@ -33,7 +34,19 @@ func main() {
 
 	// 記事情報の取得
 	router.GET("/GetArticle", func(c *gin.Context) {
-		c.JSON(http.StatusOK, article.GetArticleData())
+		var wg sync.WaitGroup
+
+		// 非同期に記事情報を取得
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			articleData := article.GetArticleData()
+			// 取得したデータをJSONで返す
+			c.JSON(http.StatusOK, articleData)
+		}()
+
+		// ゴルーチンが完了するまで待つ
+		wg.Wait()
 	})
 
 	// ログイン状態の取得
