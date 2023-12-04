@@ -26,6 +26,7 @@ function Home() {
   }, []);
 
   return (   
+    <div>
     <IsDeleteModeProvider>
     <ClickedIdsProvider>
       
@@ -43,6 +44,8 @@ function Home() {
     </ClickedIdsProvider>
 
     </IsDeleteModeProvider>
+    </div>
+
 
   );
 }
