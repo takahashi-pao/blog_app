@@ -17,10 +17,11 @@ import (
 /*
 記事の取得：エントリポイント
 */
-func GetArticleData() []gin.H {
+func GetArticleDataInit() []gin.H {
+	defer common.StartEndLog("getArticleDataInit")()
 	var data []gin.H
 	db := dbAccess.AccessDB()
-	articleData, err := getArticleData(db)
+	articleData, err := getArticleDataInit(db)
 	if err != nil {
 		// エラーハンドリング
 		log.Print(err)
@@ -65,10 +66,10 @@ func parseDateTime(dateTime string) (string, error) {
 }
 
 // 記事の取得
-func getArticleData(db *sql.DB) ([]gin.H, error) {
+func getArticleDataInit(db *sql.DB) ([]gin.H, error) {
 	var data []gin.H
 
-	sqlCommand := "SELECT id, title, update_date, thumbnail FROM article WHERE delete_flag = false"
+	sqlCommand := "SELECT id, title, update_date, thumbnail FROM article WHERE delete_flag = false limit 100 offset 0"
 	rows, err := db.Query(sqlCommand)
 	if err != nil {
 		log.Printf("GetArticleData db.Query error: %v", err)

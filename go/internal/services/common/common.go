@@ -2,7 +2,9 @@ package common
 
 import (
 	"encoding/json"
+	"log"
 	"path/filepath"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/harakeishi/gats"
@@ -32,4 +34,16 @@ func ParseAndConvert(input string) ([]interface{}, error) {
 func ConvertToString(value interface{}) string {
 	strValue, _ := gats.ToString(value)
 	return strValue
+}
+
+// メソッド開始・終了ログ
+func StartEndLog(methodName string) func() {
+	startTime := time.Now()
+	log.Printf("【START】%v-------------------------", methodName)
+
+	return func() {
+		endTime := time.Now()
+		elapsed := endTime.Sub(startTime)
+		log.Printf("【END: %v】%v-------------------------", elapsed, methodName)
+	}
 }
