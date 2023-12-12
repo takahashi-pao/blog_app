@@ -11,14 +11,23 @@ import (
 	timeformat "example.com/blog_app/go/internal/models/timeFormat"
 	common "example.com/blog_app/go/internal/services/common"
 	dbAccess "example.com/blog_app/go/internal/services/db/db_Access"
+	logUtil "example.com/blog_app/go/internal/services/log"
 	"github.com/gin-gonic/gin"
 )
+
+// type LogComponent struct {
+// 	logger   func()
+// 	logClose func()
+// }
 
 /*
 記事の取得：エントリポイント
 */
 func GetArticleDataInit() []gin.H {
-	defer common.StartEndLog("getArticleDataInit")()
+	logger, logClose := logUtil.LogInit("GetArticleDataInit")
+	defer logClose()
+	logger("test")
+
 	var data []gin.H
 	db := dbAccess.AccessDB()
 	articleData, err := getArticleDataInit(db)
