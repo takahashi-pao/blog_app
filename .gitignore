@@ -6,3 +6,5 @@ react-app/key.pem
 react-app/server.cert
 react-app/server.key
 go/cmd/img/
+go/Log/GetArticleDataInit.txt
+.gitignore
