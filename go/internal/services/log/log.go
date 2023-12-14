@@ -31,7 +31,7 @@ func LogInit(fileName string) (func(logContnt string), func()) {
 		FullTimestamp: true,
 	})
 
-	logStartStr := os.Getenv("LOG_START") + fileName + os.Getenv("LOG_CLOSE") + time.Now().String()
+	logStartStr := os.Getenv("LOG_START") + fileName + "(" + time.Now().String() + ")"
 	writeLog(logStartStr, file)
 
 	// 関数が終了する際にファイルを閉じる
@@ -49,7 +49,7 @@ func writeLog(logContent string, file *os.File) {
 
 // ログ終了
 func endLog(fileName string, file *os.File) {
-	logStartStr := os.Getenv("LOG_END") + fileName + os.Getenv("LOG_CLOSE") + time.Now().String()
+	logStartStr := os.Getenv("LOG_END") + fileName + "(" + time.Now().String() + ")"
 	writeLog(logStartStr, file)
 	writeLog("", file)
 

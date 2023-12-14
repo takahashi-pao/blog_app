@@ -76,9 +76,13 @@ func parseDateTime(dateTime string) (string, error) {
 
 // 記事の取得
 func getArticleDataInit(db *sql.DB) ([]gin.H, error) {
+	logger, logClose := logUtil.LogInit("GetArticleDataInit")
+	defer logClose()
+
 	var data []gin.H
 
 	sqlCommand := "SELECT id, title, update_date, thumbnail FROM article WHERE delete_flag = false limit 100 offset 0"
+	logger(sqlCommand)
 	rows, err := db.Query(sqlCommand)
 	if err != nil {
 		log.Printf("GetArticleData db.Query error: %v", err)
